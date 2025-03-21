@@ -23,21 +23,23 @@ namespace ChatAssignmentApp.HostedService.Services
                 if (shift == null)
                 {
                     Console.WriteLine("Remove Inactive Chat Monitor - There is no shift available. ");
-                    await Task.Delay(1000, stoppingToken);
+                    await Task.Delay(30000, stoppingToken);
                     continue;
                 }
 
                 foreach (var agent in shift.Agents)
                 {
                     agent.Chats.RemoveAll(a => !a.IsChatActive);
+                    Console.WriteLine($"Inactive chats removed for agent {agent.AgentId} {agent.AgentSeniorityType}-{agent.AgentNumber}");
                 }
 
                 foreach (var agent in shift.OverflowAgents)
                 {
                     agent.Chats.RemoveAll(a => !a.IsChatActive);
+                    Console.WriteLine($"Inactive chats removed for overflow agent {agent.AgentId} {agent.AgentSeniorityType}-{agent.AgentNumber}");
                 }
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(10000, stoppingToken);
             }
         }
     }

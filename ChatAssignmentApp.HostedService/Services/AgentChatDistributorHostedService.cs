@@ -78,16 +78,46 @@ namespace ChatAssignmentApp.HostedService.Services
             if (agentToAssign == null)
                 return false;
 
-            var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.MainChatQueueName);
-            if (chat == null && isOverflowQueueAvailable)
-                chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.OverflowChatQueueName);
+            try
+            {
+                var mainQueueItemCount = await _queueService.GetQueueItemCount(
+                    _config.RabbitMQConfiguration.MainChatQueueName);
 
-            if (chat == null)
-                return false;
+                if (mainQueueItemCount > 0)
+                {
+                    var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.MainChatQueueName);
+                    if (chat != null)
+                    {
+                        Console.WriteLine($"Assigning chat {chat.ChatId} to agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
+                        agentToAssign.AddChat(chat);
+                    }
 
-            agentToAssign.AddChat(chat);
+                    return true;
+                }
+                else if (isOverflowQueueAvailable)
+                {
+                    var overflowQueueItemCount = await _queueService.GetQueueItemCount(
+                        _config.RabbitMQConfiguration.OverflowChatQueueName);
 
-            return true;
+                    if (overflowQueueItemCount > 0)
+                    {
+                        var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.OverflowChatQueueName);
+                        if (chat != null)
+                        {
+                            Console.WriteLine($"Assigning chat {chat.ChatId} to overflow agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
+                            agentToAssign.AddChat(chat);
+                        }
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("No queues found. ");
+            }
+
+            return false;
         }
     }
 }

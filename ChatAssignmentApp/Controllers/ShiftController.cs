@@ -25,7 +25,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = await _createShiftCommand.ExecuteAsync(model);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }
@@ -37,7 +37,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = await _endShiftCommand.ExecuteAsync(shiftId);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }

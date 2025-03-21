@@ -8,7 +8,7 @@
 
         public List<Agent> Agents { get; set; } = [];
         
-        public bool IsOverflowAgentsAvailable { get; set; }
+        public bool IsOverflowAgentsAvailable { get => OverflowAgents != null && OverflowAgents.Any(); }
         public List<Agent> OverflowAgents { get; set; } = [];
 
         public int MaxChatsToQueue { get => Agents.Sum(a => a.MaxChatSessions); }
@@ -30,8 +30,7 @@
         public void AddOverflowAgents(
             List<Agent> overflowAgents)
         {
-            IsOverflowAgentsAvailable = overflowAgents == null || overflowAgents.Any() ? false : true;
-            OverflowAgents = overflowAgents;
+            OverflowAgents.AddRange(overflowAgents);
         }
     }
 }

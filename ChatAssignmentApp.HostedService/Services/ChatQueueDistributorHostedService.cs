@@ -32,13 +32,26 @@ namespace ChatAssignmentApp.HostedService.Services
                 if (shift == null)
                 {
                     Console.WriteLine("Chat Queue Distributor - There is no shift available. ");
-                    await Task.Delay(1000, stoppingToken);
+                    await Task.Delay(30000, stoppingToken);
                     continue;
                 }
 
-                await _queueService.MoveQueueItem();
+                if (shift.IsOverflowAgentsAvailable)
+                {
+                    var mainQueueItemCount = await _queueService.GetQueueItemCount(
+                        _config.RabbitMQConfiguration.MainChatQueueName);
 
-                await Task.Delay(1000, stoppingToken);
+                    if (mainQueueItemCount < shift.MaxChatsToQueue)
+                    {
+                        var overflowQueueItemCount = await _queueService.GetQueueItemCount(
+                            _config.RabbitMQConfiguration.OverflowChatQueueName);
+
+                        if (overflowQueueItemCount > 0)
+                            await _queueService.MoveQueueItem();
+                    }
+                }
+
+                await Task.Delay(30000, stoppingToken);
             }
         }
     }

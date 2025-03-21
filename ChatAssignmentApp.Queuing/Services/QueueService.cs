@@ -53,7 +53,7 @@ namespace ChatAssignmentApp.Queuing.Services
             string queueName)
         {
             var jsonString = await _rabbitMQIntegration.Dequeue(queueName);
-            return JsonSerializer.Deserialize<Chat>(jsonString);
+            return string.IsNullOrWhiteSpace(jsonString) ? null : JsonSerializer.Deserialize<Chat>(jsonString);
         }
 
         public async Task MoveQueueItem()

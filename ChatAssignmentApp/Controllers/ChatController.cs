@@ -35,7 +35,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = await _createChatCommand.ExecuteAsync(shiftId, model);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }
@@ -48,7 +48,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = _endChatCommand.Execute(shiftId, chatId);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }
@@ -61,7 +61,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = _getChatsCommand.Execute(shiftId, agentId);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }
@@ -74,7 +74,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = _getChatCommand.Execute(shiftId, chatId);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }
@@ -87,7 +87,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = _updateChatCommand.Execute(shiftId, chatId);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }
