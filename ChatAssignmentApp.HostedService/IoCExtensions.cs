@@ -7,10 +7,10 @@ namespace ChatAssignmentApp.HostedService
     {
         public static void InjectHostedServices(this IServiceCollection services)
         {
-            // services.AddHostedService<ActiveChatMonitorHostedService>();
+            services.AddHostedService<ActiveChatMonitorHostedService>();
             services.AddHostedService<AgentChatDistributorHostedService>();
-            // services.AddHostedService<ChatQueueDistributorHostedService>();
-            // services.AddHostedService<RemoveInactiveChatMonitorHostedService>();
+            services.AddHostedService<ChatQueueDistributorHostedService>();
+            services.AddHostedService<RemoveInactiveChatMonitorHostedService>();
         }
     }
 }

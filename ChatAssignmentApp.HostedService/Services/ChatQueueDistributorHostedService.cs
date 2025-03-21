@@ -25,7 +25,6 @@ namespace ChatAssignmentApp.HostedService.Services
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
         {
-            await Task.Delay(60000, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
                 var shift = _shiftStorageService.GetShift();
@@ -48,7 +47,10 @@ namespace ChatAssignmentApp.HostedService.Services
                             _config.RabbitMQConfiguration.OverflowChatQueueName);
 
                         if (overflowQueueItemCount > 0)
+                        {
+                            Console.WriteLine("Moving an item from overflow queue to main queue. ");
                             await _queueService.MoveQueueItem();
+                        }
                     }
                 }
 

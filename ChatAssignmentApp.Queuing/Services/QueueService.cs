@@ -90,8 +90,8 @@ namespace ChatAssignmentApp.Queuing.Services
             try
             {
                 await _rabbitMQIntegration.MoveQueueItem(
-                    _config.RabbitMQConfiguration.MainChatQueueName,
-                    _config.RabbitMQConfiguration.OverflowChatQueueName);
+                    _config.RabbitMQConfiguration.OverflowChatQueueName,
+                    _config.RabbitMQConfiguration.MainChatQueueName);
             }
             catch (Exception ex)
             {

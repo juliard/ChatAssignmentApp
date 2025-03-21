@@ -72,10 +72,12 @@ namespace ChatAssignmentApp.HostedService.Services
 
             int minValue = agents.Min(a => a.Chats.Count);
             var agentToAssign = agents.FirstOrDefault(
-                a => a.Chats.Count == minValue
-                    && a.Chats.Count <= a.MaxChatSessions);
+                a => a.Chats.Count == minValue);
 
             if (agentToAssign == null)
+                return false;
+
+            if (agentToAssign.Chats.Count == agentToAssign.MaxChatSessions)
                 return false;
 
             var mainQueueItemCount = await _queueService.GetQueueItemCount(
@@ -86,7 +88,8 @@ namespace ChatAssignmentApp.HostedService.Services
                 var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.MainChatQueueName);
                 if (chat != null)
                 {
-                    Console.WriteLine($"Assigning chat {chat.ChatId} to agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
+                    Console.WriteLine($"Dequeued chat {chat.ChatId} from main chat queue assigned" +
+                        $" to agent {agentToAssign.AgentId} {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
                     agentToAssign.AddChat(chat);
                 }
 
@@ -102,7 +105,8 @@ namespace ChatAssignmentApp.HostedService.Services
                     var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.OverflowChatQueueName);
                     if (chat != null)
                     {
-                        Console.WriteLine($"Assigning chat {chat.ChatId} to overflow agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
+                        Console.WriteLine($"Dequeued chat {chat.ChatId} from overflow chat queue assigned" +
+                            $" to agent {agentToAssign.AgentId} {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
                         agentToAssign.AddChat(chat);
                     }
 

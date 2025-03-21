@@ -142,6 +142,8 @@ namespace ChatAssignmentApp.Queuing.Integrations
             using var connection = await factory.CreateConnectionAsync();
             using var channel = await connection.CreateChannelAsync();
 
+            var tcs = new TaskCompletionSource<string>();
+
             var consumer = new AsyncEventingBasicConsumer(channel);
 
             consumer.ReceivedAsync += async (model, ea) =>
@@ -149,20 +151,24 @@ namespace ChatAssignmentApp.Queuing.Integrations
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                Console.WriteLine($" [x] Received {message}");
-
-                await channel.BasicPublishAsync(
-                    exchange: string.Empty,
-                    routingKey: toQueueName,
-                    body: body);
-
                 await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+
+                tcs.SetResult(message);
             };
 
             await channel.BasicConsumeAsync(
                 queue: fromQueueName,
                 autoAck: false,
                 consumer: consumer);
+
+            string item = await tcs.Task;
+
+            var body = Encoding.UTF8.GetBytes(item);
+
+            await channel.BasicPublishAsync(
+                exchange: string.Empty,
+                routingKey: toQueueName,
+                body: body);
 
             await channel.CloseAsync();
             await connection.CloseAsync();
