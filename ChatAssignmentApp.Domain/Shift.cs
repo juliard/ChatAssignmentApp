@@ -5,13 +5,16 @@
         public Guid ShiftId { get; set; }
         public DateTime ShiftStart { get; set; }
         public DateTime ShiftEnd { get; set; }
+        public bool IsShiftEnded { get => DateTime.UtcNow >= ShiftEnd; }
 
         public List<Agent> Agents { get; set; } = [];
         
-        public bool IsOverflowAgentsAvailable { get; set; }
+        public bool IsOverflowAgentsAvailable { get => OverflowAgents != null && OverflowAgents.Any(); }
         public List<Agent> OverflowAgents { get; set; } = [];
 
-        public int MaxChatsToQueue { get => Agents.Sum(a => a.MaxChatSessions) + OverflowAgents.Sum(a => a.MaxChatSessions); }
+        public int MaxChatsToQueue { get => (int)Math.Floor(Agents.Sum(a => a.MaxChatSessions) * 1.5); }
+
+        public Shift() { }
 
         public Shift(
             DateTime shiftStart,
@@ -28,8 +31,7 @@
         public void AddOverflowAgents(
             List<Agent> overflowAgents)
         {
-            IsOverflowAgentsAvailable = overflowAgents == null || overflowAgents.Any() ? false : true;
-            OverflowAgents = overflowAgents;
+            OverflowAgents.AddRange(overflowAgents);
         }
     }
 }

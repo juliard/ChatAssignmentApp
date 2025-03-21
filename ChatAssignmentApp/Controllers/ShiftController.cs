@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatAssignmentApp.Controllers
 {
-    [Route("api/shift")]
+    [Route("api/shifts")]
     public class ShiftController : Controller
     {
         private readonly ICreateShiftCommand _createShiftCommand;
@@ -22,10 +22,10 @@ namespace ChatAssignmentApp.Controllers
         public async Task<ActionResult<ShiftModel>> CreateShift(
             [FromBody] CreateShiftModel model)
         {
-            var commandResult = await _createShiftCommand.Execute(model);
+            var commandResult = await _createShiftCommand.ExecuteAsync(model);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }
@@ -37,7 +37,7 @@ namespace ChatAssignmentApp.Controllers
             var commandResult = await _endShiftCommand.ExecuteAsync(shiftId);
 
             if (!commandResult.IsSuccessful)
-                return BadRequest(commandResult);
+                return BadRequest(commandResult.ErrorMessage);
 
             return commandResult.Result;
         }

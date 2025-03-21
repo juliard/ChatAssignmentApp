@@ -12,6 +12,7 @@ namespace ChatAssignmentApp.Core.Chats
             services.AddTransient<IEndChatCommand, EndChatCommand>();
             services.AddTransient<IGetChatCommand, GetChatCommand>();
             services.AddTransient<IGetChatsCommand, GetChatsCommand>();
+            services.AddTransient<IUpdateChatCommand, UpdateChatCommand>();
         }
     }
 }

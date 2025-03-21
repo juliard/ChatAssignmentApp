@@ -35,19 +35,35 @@ namespace ChatAssignmentApp.Core.Chats.Commands
             if (shift == null)
                 return new CommandResult<bool>(false, "Current shift not found. ");
 
+            if (shift.IsShiftEnded)
+                return new CommandResult<bool>(false, "Current shift has ended. Please wait for the next shift. ");
+
             var chat = new Chat(
                 model.ChatStart,
                 model.Message);
 
-            await _queueService.Enqueue(
-                _config.RabbitMQConfiguration.MainChatQueueName,
-                chat);
+            var mainQueueItemCount = await _queueService.GetQueueItemCount(
+                _config.RabbitMQConfiguration.MainChatQueueName);
 
-            if (false)
+            if (mainQueueItemCount < shift.MaxChatsToQueue)
             {
                 await _queueService.Enqueue(
-                    _config.RabbitMQConfiguration.OverflowChatQueueName,
+                    _config.RabbitMQConfiguration.MainChatQueueName,
                     chat);
+            }
+            else if (shift.IsOverflowAgentsAvailable)
+            {
+                var overflowQueueItemCount = await _queueService.GetQueueItemCount(
+                    _config.RabbitMQConfiguration.OverflowChatQueueName);
+
+                if (overflowQueueItemCount < shift.MaxChatsToQueue)
+                {
+                    await _queueService.Enqueue(
+                        _config.RabbitMQConfiguration.OverflowChatQueueName,
+                        chat);
+                }
+                else
+                    return new CommandResult<bool>(false, "Our queues are full. Please come back again later. ");
             }
 
             return new CommandResult<bool>(true);

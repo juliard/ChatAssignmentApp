@@ -16,6 +16,10 @@
         Task<string> Dequeue(
             string queueName);
 
+        Task MoveQueueItem(
+            string fromQueueName,
+            string toQueueName);
+
         Task<uint> GetQueueItemCount(
             string queueName);
     }

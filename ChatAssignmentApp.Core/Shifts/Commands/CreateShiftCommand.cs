@@ -20,7 +20,7 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
             _shiftStorageService = shiftStorageService;
         }
 
-        public async Task<CommandResult<ShiftModel>> Execute(
+        public async Task<CommandResult<ShiftModel>> ExecuteAsync(
             CreateShiftModel model)
         {
             if (model.TotalAgents <= 0)
@@ -59,7 +59,9 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
 
             _shiftStorageService.CreateShift(shift);
 
-            await _queueService.CreateQueues(shift.MaxChatsToQueue);
+            await _queueService.CreateQueues(
+                shift.MaxChatsToQueue,
+                shift.IsOverflowAgentsAvailable);
 
             return new CommandResult<ShiftModel>(
                 new ShiftModel(shift));

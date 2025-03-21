@@ -95,8 +95,6 @@ namespace ChatAssignmentApp.Queuing.Integrations
         public async Task<string> Dequeue(
             string queueName)
         {
-            string item = string.Empty;
-
             var factory = new ConnectionFactory()
             {
                 HostName = _config.RabbitMQConfiguration.RabbitMQConnectionName
@@ -105,6 +103,8 @@ namespace ChatAssignmentApp.Queuing.Integrations
             using var connection = await factory.CreateConnectionAsync();
             using var channel = await connection.CreateChannelAsync();
 
+            var tcs = new TaskCompletionSource<string>();
+
             var consumer = new AsyncEventingBasicConsumer(channel);
 
             consumer.ReceivedAsync += async (model, ea) =>
@@ -112,12 +112,9 @@ namespace ChatAssignmentApp.Queuing.Integrations
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                Console.WriteLine($" [x] Received {message}");
-
-                // Process the message here
-                item = message;
-
                 await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+
+                tcs.SetResult(message);
             };
 
             await channel.BasicConsumeAsync(
@@ -125,10 +122,56 @@ namespace ChatAssignmentApp.Queuing.Integrations
                 autoAck: false,
                 consumer: consumer);
 
+            string item = await tcs.Task;
+
             await channel.CloseAsync();
             await connection.CloseAsync();
 
             return item;
+        }
+
+        public async Task MoveQueueItem(
+            string fromQueueName,
+            string toQueueName)
+        {
+            var factory = new ConnectionFactory()
+            {
+                HostName = _config.RabbitMQConfiguration.RabbitMQConnectionName
+            };
+
+            using var connection = await factory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            var tcs = new TaskCompletionSource<string>();
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+
+            consumer.ReceivedAsync += async (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+
+                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+
+                tcs.SetResult(message);
+            };
+
+            await channel.BasicConsumeAsync(
+                queue: fromQueueName,
+                autoAck: false,
+                consumer: consumer);
+
+            string item = await tcs.Task;
+
+            var body = Encoding.UTF8.GetBytes(item);
+
+            await channel.BasicPublishAsync(
+                exchange: string.Empty,
+                routingKey: toQueueName,
+                body: body);
+
+            await channel.CloseAsync();
+            await connection.CloseAsync();
         }
 
         public async Task<uint> GetQueueItemCount(

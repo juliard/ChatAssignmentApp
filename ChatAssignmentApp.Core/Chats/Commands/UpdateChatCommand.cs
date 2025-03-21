@@ -1,20 +1,21 @@
 ﻿using ChatAssignmentApp.Core.Chats.Interfaces;
+using ChatAssignmentApp.Core.Chats.Models;
 using ChatAssignmentApp.Core.Model;
 using ChatAssignmentApp.Memory.Services;
 
 namespace ChatAssignmentApp.Core.Chats.Commands
 {
-    public class EndChatCommand : IEndChatCommand
+    public class UpdateChatCommand : IUpdateChatCommand
     {
         private readonly IShiftStorageService _shiftStorageService;
 
-        public EndChatCommand(
+        public UpdateChatCommand(
             IShiftStorageService shiftStorageService)
         {
             _shiftStorageService = shiftStorageService;
         }
 
-        public CommandResult<bool> Execute(
+        public CommandResult<ChatModel> Execute(
             Guid shiftId,
             Guid chatId)
         {
@@ -22,28 +23,24 @@ namespace ChatAssignmentApp.Core.Chats.Commands
 
             if (shift == null)
             {
-                return new CommandResult<bool>(false, "The shift is not found. ");
+                return new CommandResult<ChatModel>(false, "The shift is not found. ");
             }
 
-            var agent = shift.Agents
+            var chat = shift.Agents
                 .Where(a => a.Chats.Any(b => b.ChatId == chatId))
-                .FirstOrDefault();
-
-            if (agent == null)
-            {
-                return new CommandResult<bool>(false, "The agent owning the chat is not found. ");
-            }
-
-            var chat = agent.Chats.FirstOrDefault(a => a.ChatId == chatId);
+                .FirstOrDefault()?
+                .Chats
+                .FirstOrDefault(a => a.ChatId == chatId);
 
             if (chat == null)
             {
-                return new CommandResult<bool>(false, "The chat is not found. ");
+                return new CommandResult<ChatModel>(false, "The chat is not found. ");
             }
 
-            agent.Chats.Remove(chat);
+            chat.UpdateChatLastModifiedTime();
 
-            return new CommandResult<bool>(true);
+            return new CommandResult<ChatModel>(
+                new ChatModel(chat));
         }
     }
 }
