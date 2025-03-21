@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChatAssignmentApp.Core.Model\ChatAssignmentApp.Core.Model.csproj" />
+    <ProjectReference Include="..\ChatAssignmentApp.Memory\ChatAssignmentApp.Memory.csproj" />
+    <ProjectReference Include="..\ChatAssignmentApp.Queuing\ChatAssignmentApp.Queuing.csproj" />
+  </ItemGroup>
+
+</Project>
