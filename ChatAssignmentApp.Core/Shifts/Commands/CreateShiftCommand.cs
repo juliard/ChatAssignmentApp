@@ -27,7 +27,7 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
                 return new CommandResult<ShiftModel>(false, "Total number of agents cannot be 0. ");
 
             if (_shiftStorageService.DoesShiftExist())
-                return new CommandResult<ShiftModel>(false, "An active shift exists. ");
+                return new CommandResult<ShiftModel>(false, "A shift exists. End the shift first before creating a new one. ");
 
             var agents = new List<Agent>();
 
