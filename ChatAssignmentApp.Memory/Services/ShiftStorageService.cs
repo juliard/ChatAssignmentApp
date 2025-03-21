@@ -39,6 +39,11 @@ namespace ChatAssignmentApp.Memory.Services
             return _shifts;
         }
 
+        public bool DoesShiftExist()
+        {
+            return _shifts.Any();
+        }
+
         public void DeleteShift(
             Shift value)
         {

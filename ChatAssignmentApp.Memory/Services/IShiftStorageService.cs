@@ -10,7 +10,9 @@ namespace ChatAssignmentApp.Memory.Services
         
         Shift? GetShift(Guid shiftId);
 
-        public List<Shift> GetShifts();
+        List<Shift> GetShifts();
+
+        bool DoesShiftExist();
 
         void DeleteShift(Shift value);
     }

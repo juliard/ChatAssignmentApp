@@ -5,7 +5,8 @@
         public Guid ShiftId { get; set; }
         public DateTime ShiftStart { get; set; }
         public DateTime ShiftEnd { get; set; }
-        public bool IsShiftEnded { get => DateTime.UtcNow >= ShiftEnd; }
+        public bool IsShiftForcefullyEnded { get; set; }
+        public bool IsShiftEnded { get => DateTime.UtcNow >= ShiftEnd || IsShiftForcefullyEnded; }
 
         public List<Agent> Agents { get; set; } = [];
         
@@ -24,8 +25,14 @@
 
             ShiftStart = shiftStart;
             ShiftEnd = shiftStart.AddHours(8);
+            IsShiftForcefullyEnded = false;
 
             Agents = agents;
+        }
+
+        public void ForceShiftEnd()
+        {
+            IsShiftForcefullyEnded = true;
         }
 
         public void AddOverflowAgents(
