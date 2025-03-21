@@ -35,7 +35,7 @@ namespace ChatAssignmentApp.Core.Chats.Commands
             if (shift == null)
                 return new CommandResult<bool>(false, "Current shift not found. ");
 
-            if (DateTime.UtcNow > shift.ShiftEnd)
+            if (shift.IsShiftEnded)
                 return new CommandResult<bool>(false, "Current shift has ended. Please wait for the next shift. ");
 
             var chat = new Chat(

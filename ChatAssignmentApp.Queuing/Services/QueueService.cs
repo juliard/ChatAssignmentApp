@@ -26,47 +26,91 @@ namespace ChatAssignmentApp.Queuing.Services
             int maxQueueSize,
             bool isOverflowChatAvailable)
         {
-            if (isOverflowChatAvailable)
-                _queues.Add(_config.RabbitMQConfiguration.OverflowChatQueueName);
+            try
+            {
+                if (isOverflowChatAvailable)
+                    _queues.Add(_config.RabbitMQConfiguration.OverflowChatQueueName);
 
-            await _rabbitMQIntegration.CreateQueues(_queues, maxQueueSize);
+                await _rabbitMQIntegration.CreateQueues(_queues, maxQueueSize);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Creation of chat queues failed - {ex.ToString()}");
+            }
         }
 
         public async Task DeleteQueues(
             bool isOverflowChatAvailable)
         {
-            if (isOverflowChatAvailable)
-                _queues.Add(_config.RabbitMQConfiguration.OverflowChatQueueName);
+            try
+            {
+                if (isOverflowChatAvailable)
+                    _queues.Add(_config.RabbitMQConfiguration.OverflowChatQueueName);
 
-            await _rabbitMQIntegration.DeleteQueues(_queues);
+                await _rabbitMQIntegration.DeleteQueues(_queues);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Deletion of chat queues failed - {ex.ToString()}");
+            }
         }
 
         public async Task Enqueue(
             string queueName,
             Chat chatToQueue)
         {
-            string jsonString = JsonSerializer.Serialize(chatToQueue);
-            await _rabbitMQIntegration.Enqueue(queueName, jsonString);
+            try
+            {
+                string jsonString = JsonSerializer.Serialize(chatToQueue);
+                await _rabbitMQIntegration.Enqueue(queueName, jsonString);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Enqueue on queue {queueName} failed - {ex.ToString()}");
+            }
         }
 
         public async Task<Chat?> Dequeue(
             string queueName)
         {
-            var jsonString = await _rabbitMQIntegration.Dequeue(queueName);
-            return string.IsNullOrWhiteSpace(jsonString) ? null : JsonSerializer.Deserialize<Chat>(jsonString);
+            try
+            {
+                var jsonString = await _rabbitMQIntegration.Dequeue(queueName);
+                return string.IsNullOrWhiteSpace(jsonString) ? null : JsonSerializer.Deserialize<Chat>(jsonString);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Dequeue on queue {queueName} failed - {ex.ToString()}");
+                return null;
+            }
         }
 
         public async Task MoveQueueItem()
         {
-            await _rabbitMQIntegration.MoveQueueItem(
-                _config.RabbitMQConfiguration.MainChatQueueName,
-                _config.RabbitMQConfiguration.OverflowChatQueueName);
+            try
+            {
+                await _rabbitMQIntegration.MoveQueueItem(
+                    _config.RabbitMQConfiguration.MainChatQueueName,
+                    _config.RabbitMQConfiguration.OverflowChatQueueName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         public async Task<uint> GetQueueItemCount(
             string queueName)
         {
-            return await _rabbitMQIntegration.GetQueueItemCount(queueName);
+            try
+            {
+                return await _rabbitMQIntegration.GetQueueItemCount(queueName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
         }
     }
 }

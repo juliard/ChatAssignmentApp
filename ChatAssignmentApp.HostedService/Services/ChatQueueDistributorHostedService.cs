@@ -25,6 +25,7 @@ namespace ChatAssignmentApp.HostedService.Services
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
         {
+            await Task.Delay(60000, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
                 var shift = _shiftStorageService.GetShift();
@@ -32,7 +33,7 @@ namespace ChatAssignmentApp.HostedService.Services
                 if (shift == null)
                 {
                     Console.WriteLine("Chat Queue Distributor - There is no shift available. ");
-                    await Task.Delay(30000, stoppingToken);
+                    await Task.Delay(1000, stoppingToken);
                     continue;
                 }
 
@@ -51,7 +52,7 @@ namespace ChatAssignmentApp.HostedService.Services
                     }
                 }
 
-                await Task.Delay(30000, stoppingToken);
+                await Task.Delay(1000, stoppingToken);
             }
         }
     }

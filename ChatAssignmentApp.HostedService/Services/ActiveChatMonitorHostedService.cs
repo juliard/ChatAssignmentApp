@@ -23,7 +23,7 @@ namespace ChatAssignmentApp.HostedService.Services
                 if (shift == null)
                 {
                     Console.WriteLine("Active Chat Monitor - There is no shift available. ");
-                    await Task.Delay(30000, stoppingToken);
+                    await Task.Delay(1000, stoppingToken);
                     continue;
                 }
 
@@ -45,7 +45,7 @@ namespace ChatAssignmentApp.HostedService.Services
                     }
                 }
 
-                await Task.Delay(30000, stoppingToken);
+                await Task.Delay(1000, stoppingToken);
             }
         }
     }

@@ -5,6 +5,7 @@
         public Guid ShiftId { get; set; }
         public DateTime ShiftStart { get; set; }
         public DateTime ShiftEnd { get; set; }
+        public bool IsShiftEnded { get => DateTime.UtcNow >= ShiftEnd; }
 
         public List<Agent> Agents { get; set; } = [];
         

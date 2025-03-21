@@ -78,43 +78,36 @@ namespace ChatAssignmentApp.HostedService.Services
             if (agentToAssign == null)
                 return false;
 
-            try
-            {
-                var mainQueueItemCount = await _queueService.GetQueueItemCount(
-                    _config.RabbitMQConfiguration.MainChatQueueName);
+            var mainQueueItemCount = await _queueService.GetQueueItemCount(
+                _config.RabbitMQConfiguration.MainChatQueueName);
 
-                if (mainQueueItemCount > 0)
+            if (mainQueueItemCount > 0)
+            {
+                var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.MainChatQueueName);
+                if (chat != null)
                 {
-                    var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.MainChatQueueName);
+                    Console.WriteLine($"Assigning chat {chat.ChatId} to agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
+                    agentToAssign.AddChat(chat);
+                }
+
+                return true;
+            }
+            else if (isOverflowQueueAvailable)
+            {
+                var overflowQueueItemCount = await _queueService.GetQueueItemCount(
+                    _config.RabbitMQConfiguration.OverflowChatQueueName);
+
+                if (overflowQueueItemCount > 0)
+                {
+                    var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.OverflowChatQueueName);
                     if (chat != null)
                     {
-                        Console.WriteLine($"Assigning chat {chat.ChatId} to agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
+                        Console.WriteLine($"Assigning chat {chat.ChatId} to overflow agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
                         agentToAssign.AddChat(chat);
                     }
 
                     return true;
                 }
-                else if (isOverflowQueueAvailable)
-                {
-                    var overflowQueueItemCount = await _queueService.GetQueueItemCount(
-                        _config.RabbitMQConfiguration.OverflowChatQueueName);
-
-                    if (overflowQueueItemCount > 0)
-                    {
-                        var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.OverflowChatQueueName);
-                        if (chat != null)
-                        {
-                            Console.WriteLine($"Assigning chat {chat.ChatId} to overflow agent {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
-                            agentToAssign.AddChat(chat);
-                        }
-
-                        return true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("No queues found. ");
             }
 
             return false;
