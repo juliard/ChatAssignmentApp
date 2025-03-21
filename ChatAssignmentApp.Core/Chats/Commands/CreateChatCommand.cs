@@ -35,6 +35,9 @@ namespace ChatAssignmentApp.Core.Chats.Commands
             if (shift == null)
                 return new CommandResult<bool>(false, "Current shift not found. ");
 
+            if (DateTime.UtcNow > shift.ShiftEnd)
+                return new CommandResult<bool>(false, "Current shift has ended. Please wait for the next shift. ");
+
             var chat = new Chat(
                 model.ChatStart,
                 model.Message);
@@ -43,7 +46,7 @@ namespace ChatAssignmentApp.Core.Chats.Commands
                 _config.RabbitMQConfiguration.MainChatQueueName,
                 chat);
 
-            if (false)
+            if (shift.IsOverflowAgentsAvailable)
             {
                 await _queueService.Enqueue(
                     _config.RabbitMQConfiguration.OverflowChatQueueName,

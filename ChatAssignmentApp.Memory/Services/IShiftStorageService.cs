@@ -6,6 +6,8 @@ namespace ChatAssignmentApp.Memory.Services
     {
         void CreateShift(Shift value);
 
+        Shift? GetShift();
+        
         Shift? GetShift(Guid shiftId);
 
         public List<Shift> GetShifts();

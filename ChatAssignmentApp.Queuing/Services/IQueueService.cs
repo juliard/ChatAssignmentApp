@@ -5,9 +5,11 @@ namespace ChatAssignmentApp.Queuing.Services
     public interface IQueueService
     {
         Task CreateQueues(
-            int maxQueueSize);
+            int maxQueueSize,
+            bool isOverflowChatAvailable);
 
-        Task DeleteQueues();
+        Task DeleteQueues(
+            bool isOverflowChatAvailable);
 
         Task Enqueue(
             string queueName,
@@ -15,6 +17,9 @@ namespace ChatAssignmentApp.Queuing.Services
 
         Task<Chat?> Dequeue(
             string queueName);
+
+        Task MoveQueueItem();
+
         Task<uint> GetQueueItemCount(
             string queueName);
     }

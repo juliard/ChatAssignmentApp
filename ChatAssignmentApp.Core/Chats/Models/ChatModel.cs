@@ -9,6 +9,7 @@ namespace ChatAssignmentApp.Core.Chats.Models
         public Guid? AgentId { get; set; }
 
         public DateTime ChatStart { get; set; }
+        public DateTime ChatLastModified { get; set; }
         public string Message { get; set; } = string.Empty;
 
         public ChatModel(
@@ -18,6 +19,7 @@ namespace ChatAssignmentApp.Core.Chats.Models
             AgentId = chat.ChatId;
 
             ChatStart = chat.ChatStart;
+            ChatLastModified = chat.ChatLastModified;
             Message = chat.Message;
         }
     }

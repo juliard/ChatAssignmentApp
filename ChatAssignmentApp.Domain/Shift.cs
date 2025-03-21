@@ -11,7 +11,9 @@
         public bool IsOverflowAgentsAvailable { get; set; }
         public List<Agent> OverflowAgents { get; set; } = [];
 
-        public int MaxChatsToQueue { get => Agents.Sum(a => a.MaxChatSessions) + OverflowAgents.Sum(a => a.MaxChatSessions); }
+        public int MaxChatsToQueue { get => Agents.Sum(a => a.MaxChatSessions); }
+
+        public Shift() { }
 
         public Shift(
             DateTime shiftStart,

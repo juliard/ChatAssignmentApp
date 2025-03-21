@@ -131,6 +131,44 @@ namespace ChatAssignmentApp.Queuing.Integrations
             return item;
         }
 
+        public async Task MoveQueueItem(
+            string fromQueueName,
+            string toQueueName)
+        {
+            var factory = new ConnectionFactory()
+            {
+                HostName = _config.RabbitMQConfiguration.RabbitMQConnectionName
+            };
+
+            using var connection = await factory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+
+            consumer.ReceivedAsync += async (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+
+                Console.WriteLine($" [x] Received {message}");
+
+                await channel.BasicPublishAsync(
+                    exchange: string.Empty,
+                    routingKey: toQueueName,
+                    body: body);
+
+                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+            };
+
+            await channel.BasicConsumeAsync(
+                queue: fromQueueName,
+                autoAck: false,
+                consumer: consumer);
+
+            await channel.CloseAsync();
+            await connection.CloseAsync();
+        }
+
         public async Task<uint> GetQueueItemCount(
             string queueName)
         {

@@ -13,6 +13,16 @@ namespace ChatAssignmentApp.Memory.Services
                 _shifts.Add(value);
         }
 
+        public Shift? GetShift()
+        {
+            var shift = _shifts.FirstOrDefault();
+
+            if (shift != null)
+                return shift;
+
+            return null;
+        }
+
         public Shift? GetShift(
             Guid shiftId)
         {

@@ -10,35 +10,35 @@ namespace ChatAssignmentApp.Queuing.Services
         private readonly Configuration _config;
         private readonly IRabbitMQIntegration _rabbitMQIntegration;
 
+        private readonly List<string> _queues = [];
+
         public QueueService(
             Configuration configuration,
             IRabbitMQIntegration rabbitMQIntegration)
         {
             _config = configuration;
             _rabbitMQIntegration = rabbitMQIntegration;
+
+            _queues.Add(_config.RabbitMQConfiguration.MainChatQueueName);
         }
 
         public async Task CreateQueues(
-            int maxQueueSize)
+            int maxQueueSize,
+            bool isOverflowChatAvailable)
         {
-            var queuesToCreate = new List<string>()
-            {
-                _config.RabbitMQConfiguration.MainChatQueueName,
-                _config.RabbitMQConfiguration.OverflowChatQueueName,
-            };
+            if (isOverflowChatAvailable)
+                _queues.Add(_config.RabbitMQConfiguration.OverflowChatQueueName);
 
-            await _rabbitMQIntegration.CreateQueues(queuesToCreate, maxQueueSize);
+            await _rabbitMQIntegration.CreateQueues(_queues, maxQueueSize);
         }
 
-        public async Task DeleteQueues()
+        public async Task DeleteQueues(
+            bool isOverflowChatAvailable)
         {
-            var queuesToDelete = new List<string>()
-            {
-                _config.RabbitMQConfiguration.MainChatQueueName,
-                _config.RabbitMQConfiguration.OverflowChatQueueName,
-            };
+            if (isOverflowChatAvailable)
+                _queues.Add(_config.RabbitMQConfiguration.OverflowChatQueueName);
 
-            await _rabbitMQIntegration.DeleteQueues(queuesToDelete);
+            await _rabbitMQIntegration.DeleteQueues(_queues);
         }
 
         public async Task Enqueue(
@@ -54,6 +54,13 @@ namespace ChatAssignmentApp.Queuing.Services
         {
             var jsonString = await _rabbitMQIntegration.Dequeue(queueName);
             return JsonSerializer.Deserialize<Chat>(jsonString);
+        }
+
+        public async Task MoveQueueItem()
+        {
+            await _rabbitMQIntegration.MoveQueueItem(
+                _config.RabbitMQConfiguration.MainChatQueueName,
+                _config.RabbitMQConfiguration.OverflowChatQueueName);
         }
 
         public async Task<uint> GetQueueItemCount(

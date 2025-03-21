@@ -26,7 +26,7 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
             if (currentShift == null)
                 return new CommandResult<bool>(false, "Current shift not found. ");
 
-            await _queueService.DeleteQueues();
+            await _queueService.DeleteQueues(currentShift.IsOverflowAgentsAvailable);
 
             _shiftStorageService.DeleteShift(currentShift);
 
