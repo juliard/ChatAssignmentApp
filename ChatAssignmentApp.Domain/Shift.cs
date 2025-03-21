@@ -12,7 +12,7 @@
         public bool IsOverflowAgentsAvailable { get => OverflowAgents != null && OverflowAgents.Any(); }
         public List<Agent> OverflowAgents { get; set; } = [];
 
-        public int MaxChatsToQueue { get => Agents.Sum(a => a.MaxChatSessions); }
+        public int MaxChatsToQueue { get => (int)Math.Floor(Agents.Sum(a => a.MaxChatSessions) * 1.5); }
 
         public Shift() { }
 
