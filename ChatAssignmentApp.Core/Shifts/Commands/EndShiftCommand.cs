@@ -36,7 +36,7 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
             var overflowQueueItemCount = await _queueService.GetQueueItemCount(
                 _config.RabbitMQConfiguration.OverflowChatQueueName);
 
-            if (mainQueueItemCount > 0 && overflowQueueItemCount > 0)
+            if (mainQueueItemCount > 0 || overflowQueueItemCount > 0)
             {
                 currentShift.ForceShiftEnd();
                 return new CommandResult<bool>(true);

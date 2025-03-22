@@ -9,6 +9,8 @@
 
         public List<Chat> Chats { get; set; } = [];
 
+        public Agent() { }
+
         public Agent(
             int agentNumber,
             AgentSeniorityType agentSeniorityType)

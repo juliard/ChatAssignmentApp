@@ -11,11 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatAssignmentApp.Core", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatAssignmentApp.HostedService", "ChatAssignmentApp.HostedService\ChatAssignmentApp.HostedService.csproj", "{B5B1C4D2-BA4B-4A2C-9B0D-BCA6EDE17B77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatAssignmentApp.Memory", "ChatAssignmentApp.Memory\ChatAssignmentApp.Memory.csproj", "{41A103B7-9D8C-4D95-A6A9-E180B8C032A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatAssignmentApp.Memory", "ChatAssignmentApp.Memory\ChatAssignmentApp.Memory.csproj", "{41A103B7-9D8C-4D95-A6A9-E180B8C032A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatAssignmentApp.Queuing", "ChatAssignmentApp.Queuing\ChatAssignmentApp.Queuing.csproj", "{AF6964FA-E848-4012-8971-43406A0B6163}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatAssignmentApp.Queuing", "ChatAssignmentApp.Queuing\ChatAssignmentApp.Queuing.csproj", "{AF6964FA-E848-4012-8971-43406A0B6163}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatAssignmentApp.Core.Model", "ChatAssignmentApp.Core.Model\ChatAssignmentApp.Core.Model.csproj", "{3841A5F2-E9B1-4A74-8615-6B73EF38D233}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatAssignmentApp.Core.Model", "ChatAssignmentApp.Core.Model\ChatAssignmentApp.Core.Model.csproj", "{3841A5F2-E9B1-4A74-8615-6B73EF38D233}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatAssignmentApp.Core.Test", "ChatAssignmentApp.Core.Test\ChatAssignmentApp.Core.Test.csproj", "{796C3425-AC9A-4ECD-BA30-943131254D7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{3841A5F2-E9B1-4A74-8615-6B73EF38D233}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3841A5F2-E9B1-4A74-8615-6B73EF38D233}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3841A5F2-E9B1-4A74-8615-6B73EF38D233}.Release|Any CPU.Build.0 = Release|Any CPU
+		{796C3425-AC9A-4ECD-BA30-943131254D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{796C3425-AC9A-4ECD-BA30-943131254D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{796C3425-AC9A-4ECD-BA30-943131254D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{796C3425-AC9A-4ECD-BA30-943131254D7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
