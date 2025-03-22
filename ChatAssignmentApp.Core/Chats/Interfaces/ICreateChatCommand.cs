@@ -6,7 +6,7 @@ namespace ChatAssignmentApp.Core.Chats.Interfaces
     public interface ICreateChatCommand
     {
         Task<CommandResult<bool>> ExecuteAsync(
-            Guid? shiftId,
+            Guid shiftId,
             CreateChatModel model);
     }
 }

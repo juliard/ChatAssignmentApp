@@ -22,9 +22,7 @@ namespace ChatAssignmentApp.Core.Chats.Commands
             var shift = _shiftStorageService.GetShift(shiftId);
 
             if (shift == null)
-            {
                 return new CommandResult<ChatModel>(false, "The shift is not found. ");
-            }
 
             var chat = shift.Agents
                 .Where(a => a.Chats.Any(b => b.ChatId == chatId))
@@ -32,10 +30,18 @@ namespace ChatAssignmentApp.Core.Chats.Commands
                 .Chats
                 .FirstOrDefault(a => a.ChatId == chatId);
 
-            if (chat == null)
+            if (chat == null
+                && shift.IsOverflowAgentsAvailable)
             {
-                return new CommandResult<ChatModel>(false, "The chat is not found. ");
+                chat = shift.OverflowAgents
+                    .Where(a => a.Chats.Any(b => b.ChatId == chatId))
+                    .FirstOrDefault()?
+                    .Chats
+                    .FirstOrDefault(a => a.ChatId == chatId);
             }
+
+            if (chat == null)
+                return new CommandResult<ChatModel>(false, "The chat is not found. ");
 
             return new CommandResult<ChatModel>(
                 new ChatModel(chat));
