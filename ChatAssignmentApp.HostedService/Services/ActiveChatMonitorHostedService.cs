@@ -34,11 +34,18 @@ namespace ChatAssignmentApp.HostedService.Services
                     .OrderBy(a => a.ChatLastModified)
                     .ToList();
 
+                chats.AddRange(
+                    shift.OverflowAgents
+                        .SelectMany(a => a.Chats)
+                        .OrderBy(a => a.ChatLastModified)
+                        .ToList());
+
                 foreach (var chat in chats)
                 {
                     var difference = currentPollTime - chat.ChatLastModified;
 
-                    if (difference.TotalSeconds >= 60)
+                    if (difference.TotalSeconds >= 3
+                        && chat.IsChatActive)
                     {
                         chat.SetChatToInactive();
                         Console.WriteLine($"Setting {chat.ChatId} to inactive");

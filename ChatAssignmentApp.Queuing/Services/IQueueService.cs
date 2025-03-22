@@ -18,7 +18,9 @@ namespace ChatAssignmentApp.Queuing.Services
         Task<Chat?> Dequeue(
             string queueName);
 
-        Task MoveQueueItem();
+        Task<Chat?> MoveQueueItem(
+            string fromQueueName,
+            string toQueueName);
 
         Task<uint> GetQueueItemCount(
             string queueName);

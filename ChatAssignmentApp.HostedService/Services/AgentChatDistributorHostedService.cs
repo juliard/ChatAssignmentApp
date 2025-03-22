@@ -42,21 +42,21 @@ namespace ChatAssignmentApp.HostedService.Services
                 var srAgents = shift.Agents.Where(a => a.AgentSeniorityType == AgentSeniorityType.Senior).ToList();
                 var leadAgents = shift.Agents.Where(a => a.AgentSeniorityType == AgentSeniorityType.Lead).ToList();
 
-                var chatAssigned = await AssignChat(jrAgents, shift.IsOverflowAgentsAvailable);
+                var chatAssigned = await AssignChat(jrAgents, shift.IsOverflowAgentsAvailable, false);
 
                 if (!chatAssigned)
-                    chatAssigned = await AssignChat(midAgents, shift.IsOverflowAgentsAvailable);
+                    chatAssigned = await AssignChat(midAgents, shift.IsOverflowAgentsAvailable, false);
 
                 if (!chatAssigned)
-                    chatAssigned = await AssignChat(srAgents, shift.IsOverflowAgentsAvailable);
+                    chatAssigned = await AssignChat(srAgents, shift.IsOverflowAgentsAvailable, false);
 
                 if (!chatAssigned)
-                    chatAssigned = await AssignChat(leadAgents, shift.IsOverflowAgentsAvailable);
+                    chatAssigned = await AssignChat(leadAgents, shift.IsOverflowAgentsAvailable, false);
 
                 if (!chatAssigned
                     && shift.IsOverflowAgentsAvailable)
                 {
-                    chatAssigned = await AssignChat(shift.OverflowAgents, shift.IsOverflowAgentsAvailable);
+                    chatAssigned = await AssignChat(shift.OverflowAgents, shift.IsOverflowAgentsAvailable, true);
                 }
 
                 await Task.Delay(1000, stoppingToken);
@@ -65,7 +65,8 @@ namespace ChatAssignmentApp.HostedService.Services
 
         private async Task<bool> AssignChat(
             List<Agent> agents,
-            bool isOverflowQueueAvailable)
+            bool isOverflowQueueAvailable,
+            bool isOverflowAgent)
         {
             if (agents == null || !agents.Any())
                 return false;
@@ -85,17 +86,21 @@ namespace ChatAssignmentApp.HostedService.Services
 
             if (mainQueueItemCount > 0)
             {
-                var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.MainChatQueueName);
-                if (chat != null)
-                {
-                    Console.WriteLine($"Dequeued chat {chat.ChatId} from main chat queue assigned" +
-                        $" to agent {agentToAssign.AgentId} {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
-                    agentToAssign.AddChat(chat);
-                }
+                var chat = await _queueService.Dequeue(
+                    _config.RabbitMQConfiguration.MainChatQueueName);
 
-                return true;
+                if (chat == null)
+                    return false;
+
+                var overflowText = isOverflowAgent ? "overflow" : string.Empty;
+
+                Console.WriteLine($"Dequeued chat {chat.ChatId} from main chat queue assigned" +
+                    $" to {overflowText} agent {agentToAssign.AgentId} {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
+
+                agentToAssign.AddChat(chat);
             }
-            else if (isOverflowQueueAvailable)
+
+            /*else if (isOverflowQueueAvailable)
             {
                 var overflowQueueItemCount = await _queueService.GetQueueItemCount(
                     _config.RabbitMQConfiguration.OverflowChatQueueName);
@@ -112,9 +117,9 @@ namespace ChatAssignmentApp.HostedService.Services
 
                     return true;
                 }
-            }
+            }*/
 
-            return false;
+            return true;
         }
     }
 }

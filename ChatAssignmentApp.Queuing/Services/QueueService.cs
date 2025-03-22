@@ -85,17 +85,24 @@ namespace ChatAssignmentApp.Queuing.Services
             }
         }
 
-        public async Task MoveQueueItem()
+        public async Task<Chat?> MoveQueueItem(
+            string fromQueueName,
+            string toQueueName)
         {
             try
             {
-                await _rabbitMQIntegration.MoveQueueItem(
-                    _config.RabbitMQConfiguration.OverflowChatQueueName,
-                    _config.RabbitMQConfiguration.MainChatQueueName);
+                var chat = await Dequeue(fromQueueName);
+
+                if (chat == null)
+                    return null;
+
+                await Enqueue(toQueueName, chat);
+                return chat;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                return null;
             }
         }
 
