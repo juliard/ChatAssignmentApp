@@ -9,13 +9,16 @@ namespace ChatAssignmentApp.Controllers
     {
         private readonly ICreateShiftCommand _createShiftCommand;
         private readonly IEndShiftCommand _endShiftCommand;
+        private readonly IGetShiftsCommand _getShiftsCommand;
 
         public ShiftController(
             ICreateShiftCommand createShiftCommand,
-            IEndShiftCommand endShiftCommand)
+            IEndShiftCommand endShiftCommand,
+            IGetShiftsCommand getShiftsCommand)
         {
             _createShiftCommand = createShiftCommand;
             _endShiftCommand = endShiftCommand;
+            _getShiftsCommand = getShiftsCommand;
         }
 
         [HttpPost]
@@ -23,6 +26,17 @@ namespace ChatAssignmentApp.Controllers
             [FromBody] CreateShiftModel model)
         {
             var commandResult = await _createShiftCommand.ExecuteAsync(model);
+
+            if (!commandResult.IsSuccessful)
+                return BadRequest(commandResult.ErrorMessage);
+
+            return commandResult.Result;
+        }
+
+        [HttpGet]
+        public ActionResult<List<ShiftModel>> GetShifts()
+        {
+            var commandResult = _getShiftsCommand.Execute();
 
             if (!commandResult.IsSuccessful)
                 return BadRequest(commandResult.ErrorMessage);

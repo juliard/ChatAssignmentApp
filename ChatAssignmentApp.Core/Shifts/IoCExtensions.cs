@@ -10,6 +10,7 @@ namespace ChatAssignmentApp.Core.Shifts
         {
             services.AddTransient<ICreateShiftCommand, CreateShiftCommand>();
             services.AddTransient<IEndShiftCommand, EndShiftCommand>();
+            services.AddTransient<IGetShiftsCommand, GetShiftsCommand>();
         }
     }
 }

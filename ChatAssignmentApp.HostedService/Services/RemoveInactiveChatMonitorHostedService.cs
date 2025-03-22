@@ -1,4 +1,5 @@
-﻿using ChatAssignmentApp.Memory.Services;
+﻿using ChatAssignmentApp.Domain;
+using ChatAssignmentApp.Memory.Services;
 using Microsoft.Extensions.Hosting;
 
 namespace ChatAssignmentApp.HostedService.Services
@@ -29,14 +30,20 @@ namespace ChatAssignmentApp.HostedService.Services
 
                 foreach (var agent in shift.Agents)
                 {
-                    agent.Chats.RemoveAll(a => !a.IsChatActive);
-                    Console.WriteLine($"Inactive chats removed for agent {agent.AgentId} {agent.AgentSeniorityType}-{agent.AgentNumber}");
+                    if (agent.Chats.Any(a => !a.IsChatActive))
+                    {
+                        agent.Chats.RemoveAll(a => !a.IsChatActive);
+                        Console.WriteLine($"Inactive chats removed for agent {agent.AgentId} {agent.AgentSeniorityType}-{agent.AgentNumber}");
+                    }
                 }
 
                 foreach (var agent in shift.OverflowAgents)
                 {
-                    agent.Chats.RemoveAll(a => !a.IsChatActive);
-                    Console.WriteLine($"Inactive chats removed for overflow agent {agent.AgentId} {agent.AgentSeniorityType}-{agent.AgentNumber}");
+                    if (agent.Chats.Any(a => !a.IsChatActive))
+                    {
+                        agent.Chats.RemoveAll(a => !a.IsChatActive);
+                        Console.WriteLine($"Inactive chats removed for overflow agent {agent.AgentId} {agent.AgentSeniorityType}-{agent.AgentNumber}");
+                    }
                 }
 
                 await Task.Delay(1000, stoppingToken);

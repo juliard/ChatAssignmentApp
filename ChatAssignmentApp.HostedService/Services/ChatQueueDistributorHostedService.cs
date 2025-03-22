@@ -48,8 +48,11 @@ namespace ChatAssignmentApp.HostedService.Services
 
                         if (overflowQueueItemCount > 0)
                         {
-                            Console.WriteLine("Moving an item from overflow queue to main queue. ");
-                            await _queueService.MoveQueueItem();
+                            var chat = await _queueService.MoveQueueItem(
+                                _config.RabbitMQConfiguration.OverflowChatQueueName,
+                                _config.RabbitMQConfiguration.MainChatQueueName);
+
+                            Console.WriteLine($"Moving chat {chat?.ChatId} from overflow queue to main queue. ");
                         }
                     }
                 }

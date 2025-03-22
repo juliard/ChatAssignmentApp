@@ -36,7 +36,7 @@ namespace ChatAssignmentApp.Core.Chats.Commands
                 return new CommandResult<bool>(false, "Current shift not found. ");
 
             if (shift.IsShiftEnded)
-                return new CommandResult<bool>(false, "Current shift has ended. Please wait for the next shift. ");
+                return new CommandResult<bool>(false, "Current shift has ended. Finalizing active chat sessions. Please wait for the next shift. ");
 
             var chat = new Chat(
                 model.ChatStart,

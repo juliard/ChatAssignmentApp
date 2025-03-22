@@ -7,6 +7,8 @@ namespace ChatAssignmentApp.Core.Shifts.Models
         public Guid ShiftId { get; set; }
         public DateTime ShiftStart { get; set; }
         public DateTime ShiftEnd { get; set; }
+        public bool IsShiftForcefullyEnded { get; set; }
+        public bool IsShiftEnded { get; set; }
 
         public List<AgentModel> Agents { get; set; } = [];
 
@@ -19,6 +21,8 @@ namespace ChatAssignmentApp.Core.Shifts.Models
             ShiftId = shift.ShiftId;
             ShiftStart = shift.ShiftStart;
             ShiftEnd = shift.ShiftEnd;
+            IsShiftForcefullyEnded = shift.IsShiftForcefullyEnded;
+            IsShiftEnded = shift.IsShiftEnded;
 
             Agents = shift.Agents.Select(a => new AgentModel(a)).ToList();
 
