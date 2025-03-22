@@ -24,13 +24,10 @@ namespace ChatAssignmentApp.Core.Chats.Commands
         }
 
         public async Task<CommandResult<bool>> ExecuteAsync(
-            Guid? shiftId,
+            Guid shiftId,
             CreateChatModel model)
         {
-            if (!shiftId.HasValue)
-                return new CommandResult<bool>(false, "Current shift not found. ");
-
-            var shift = _shiftStorageService.GetShift(shiftId.Value);
+            var shift = _shiftStorageService.GetShift(shiftId);
 
             if (shift == null)
                 return new CommandResult<bool>(false, "Current shift not found. ");

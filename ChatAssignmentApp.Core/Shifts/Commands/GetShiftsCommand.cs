@@ -19,7 +19,7 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
         {
             var shifts = _shiftStorageService.GetShifts();
 
-            if (shifts == null)
+            if (shifts == null || !shifts.Any())
                 return new CommandResult<List<ShiftModel>>(false, "There are no shifts found. ");
 
             return new CommandResult<List<ShiftModel>>(

@@ -8,6 +8,8 @@
         public string Message { get; set; } = string.Empty;
         public bool IsChatActive { get; set; }
 
+        public Chat() { }
+
         public Chat(
             DateTime chatStart,
             string message)
