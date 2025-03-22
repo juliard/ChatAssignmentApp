@@ -1,5 +1,4 @@
-﻿using ChatAssignmentApp.Domain;
-using ChatAssignmentApp.Memory.Services;
+﻿using ChatAssignmentApp.Memory.Services;
 using Microsoft.Extensions.Hosting;
 
 namespace ChatAssignmentApp.HostedService.Services

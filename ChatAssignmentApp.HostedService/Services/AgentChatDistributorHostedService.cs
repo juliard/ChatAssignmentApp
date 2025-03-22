@@ -26,6 +26,7 @@ namespace ChatAssignmentApp.HostedService.Services
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
         {
+            await Task.Delay(60000, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
                 var shift = _shiftStorageService.GetShift();
@@ -99,25 +100,6 @@ namespace ChatAssignmentApp.HostedService.Services
 
                 agentToAssign.AddChat(chat);
             }
-
-            /*else if (isOverflowQueueAvailable)
-            {
-                var overflowQueueItemCount = await _queueService.GetQueueItemCount(
-                    _config.RabbitMQConfiguration.OverflowChatQueueName);
-
-                if (overflowQueueItemCount > 0)
-                {
-                    var chat = await _queueService.Dequeue(_config.RabbitMQConfiguration.OverflowChatQueueName);
-                    if (chat != null)
-                    {
-                        Console.WriteLine($"Dequeued chat {chat.ChatId} from overflow chat queue assigned" +
-                            $" to agent {agentToAssign.AgentId} {agentToAssign.AgentSeniorityType}-{agentToAssign.AgentNumber}");
-                        agentToAssign.AddChat(chat);
-                    }
-
-                    return true;
-                }
-            }*/
 
             return true;
         }

@@ -1,4 +1,5 @@
-﻿using ChatAssignmentApp.Memory.Services;
+﻿using ChatAssignmentApp.Domain;
+using ChatAssignmentApp.Memory.Services;
 using Microsoft.Extensions.Hosting;
 
 namespace ChatAssignmentApp.HostedService.Services
@@ -29,18 +30,30 @@ namespace ChatAssignmentApp.HostedService.Services
 
                 var currentPollTime = DateTime.UtcNow;
 
-                var chats = shift.Agents
-                    .SelectMany(a => a.Chats)
-                    .OrderBy(a => a.ChatLastModified)
-                    .ToList();
+                var chatsToUpdate = new List<Chat>();
 
-                chats.AddRange(
-                    shift.OverflowAgents
-                        .SelectMany(a => a.Chats)
-                        .OrderBy(a => a.ChatLastModified)
-                        .ToList());
+                if (shift.Agents.Any(a => a.Chats.Any()))
+                {
+                    chatsToUpdate.AddRange(
+                        shift.Agents
+                            .Where(a => a.Chats.Any())
+                            .SelectMany(a => a.Chats)
+                            .OrderBy(a => a.ChatLastModified)
+                            .ToList());
+                }
 
-                foreach (var chat in chats)
+                if (shift.IsOverflowAgentsAvailable
+                    && shift.OverflowAgents.Any(a => a.Chats.Any()))
+                {
+                    chatsToUpdate.AddRange(
+                        shift.OverflowAgents
+                            .Where(a => a.Chats.Any())
+                            .SelectMany(a => a.Chats)
+                            .OrderBy(a => a.ChatLastModified)
+                            .ToList());
+                }
+
+                foreach (var chat in chatsToUpdate)
                 {
                     var difference = currentPollTime - chat.ChatLastModified;
 
