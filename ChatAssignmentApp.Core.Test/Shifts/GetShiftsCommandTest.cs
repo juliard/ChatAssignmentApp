@@ -10,7 +10,7 @@ namespace ChatAssignmentApp.Core.Test.Shifts
         [Fact]
         public void GetShifts_Success()
         {
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
 
             var shiftStorage = new Mock<IShiftStorageService>();

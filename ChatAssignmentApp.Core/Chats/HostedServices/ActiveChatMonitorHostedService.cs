@@ -1,16 +1,20 @@
-﻿using ChatAssignmentApp.Domain;
+﻿using ChatAssignmentApp.Core.Model;
+using ChatAssignmentApp.Domain;
 using ChatAssignmentApp.Memory.Services;
 using Microsoft.Extensions.Hosting;
 
-namespace ChatAssignmentApp.HostedService.Services
+namespace ChatAssignmentApp.Core.Chats.HostedServices
 {
     public class ActiveChatMonitorHostedService : BackgroundService
     {
+        private readonly Configuration _config;
         private readonly IShiftStorageService _shiftStorageService;
 
         public ActiveChatMonitorHostedService(
+            Configuration config,
             IShiftStorageService shiftStorageService)
         {
+            _config = config;
             _shiftStorageService = shiftStorageService;
         }
 
@@ -57,7 +61,7 @@ namespace ChatAssignmentApp.HostedService.Services
                 {
                     var difference = currentPollTime - chat.ChatLastModified;
 
-                    if (difference.TotalSeconds >= 3
+                    if (difference.TotalSeconds >= _config.RabbitMQConfiguration.ChatInactivityExpiryInSeconds
                         && chat.IsChatActive)
                     {
                         chat.SetChatToInactive();

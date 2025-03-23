@@ -13,7 +13,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
             var chat = new Chat(DateTime.Now, "Hello world");
             var chat2 = new Chat(DateTime.Now, "Hello world");
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             agent.AddChat(chat);
             agent.AddChat(chat2);
 
@@ -37,10 +37,10 @@ namespace ChatAssignmentApp.Core.Test.Chats
             var chat = new Chat(DateTime.Now, "Hello world");
             var chat2 = new Chat(DateTime.Now, "Hello world");
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             agent.AddChat(chat);
 
-            var overflowAgent = new Agent(1, AgentSeniorityType.Junior);
+            var overflowAgent = new Agent(1, AgentSeniorityType.Junior, false);
             overflowAgent.AddChat(chat2);
 
             var shift = new Shift(DateTime.Now, [agent]);

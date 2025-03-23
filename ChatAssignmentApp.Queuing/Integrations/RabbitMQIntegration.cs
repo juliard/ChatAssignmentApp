@@ -1,6 +1,5 @@
 ﻿using ChatAssignmentApp.Core.Model;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using System.Text;
 
 namespace ChatAssignmentApp.Queuing.Integrations
@@ -90,44 +89,6 @@ namespace ChatAssignmentApp.Queuing.Integrations
 
             await channel.CloseAsync();
             await connection.CloseAsync();
-        }
-
-        public async Task<string> Dequeue(
-            string queueName)
-        {
-            var factory = new ConnectionFactory()
-            {
-                HostName = _config.RabbitMQConfiguration.RabbitMQConnectionName
-            };
-
-            using var connection = await factory.CreateConnectionAsync();
-            using var channel = await connection.CreateChannelAsync();
-
-            var tcs = new TaskCompletionSource<string>();
-
-            var consumer = new AsyncEventingBasicConsumer(channel);
-
-            consumer.ReceivedAsync += async (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-
-                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
-
-                tcs.SetResult(message);
-            };
-
-            await channel.BasicConsumeAsync(
-                queue: queueName,
-                autoAck: false,
-                consumer: consumer);
-
-            string item = await tcs.Task;
-
-            await channel.CloseAsync();
-            await connection.CloseAsync();
-
-            return item;
         }
 
         public async Task<uint> GetQueueItemCount(

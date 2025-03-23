@@ -70,42 +70,6 @@ namespace ChatAssignmentApp.Queuing.Services
             }
         }
 
-        public async Task<Chat?> Dequeue(
-            string queueName)
-        {
-            try
-            {
-                var jsonString = await _rabbitMQIntegration.Dequeue(queueName);
-                return string.IsNullOrWhiteSpace(jsonString) ? null : JsonSerializer.Deserialize<Chat>(jsonString);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Dequeue on queue {queueName} failed - {ex.ToString()}");
-                return null;
-            }
-        }
-
-        public async Task<Chat?> MoveQueueItem(
-            string fromQueueName,
-            string toQueueName)
-        {
-            try
-            {
-                var chat = await Dequeue(fromQueueName);
-
-                if (chat == null)
-                    return null;
-
-                await Enqueue(toQueueName, chat);
-                return chat;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return null;
-            }
-        }
-
         public async Task<uint> GetQueueItemCount(
             string queueName)
         {

@@ -12,7 +12,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
         {
             var chat = new Chat(DateTime.Now, "Hello world");
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             agent.AddChat(chat);
 
             var shift = new Shift(DateTime.Now, [agent]);
@@ -34,8 +34,8 @@ namespace ChatAssignmentApp.Core.Test.Chats
         {
             var chat = new Chat(DateTime.Now, "Hello world");
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
-            var overflowAgent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
+            var overflowAgent = new Agent(1, AgentSeniorityType.Junior, true);
             overflowAgent.AddChat(chat);
 
             var shift = new Shift(DateTime.Now, [agent]);

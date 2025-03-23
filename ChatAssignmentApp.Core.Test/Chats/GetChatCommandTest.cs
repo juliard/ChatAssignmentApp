@@ -12,7 +12,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
         {
             var chat = new Chat(DateTime.Now, "Hello world");
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             agent.AddChat(chat);
 
             var shift = new Shift(DateTime.Now, [agent]);
@@ -32,7 +32,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
         [Fact]
         public void GetChat_ChatNotFound()
         {
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
 
             var shiftStorage = new Mock<IShiftStorageService>();

@@ -8,6 +8,7 @@ namespace ChatAssignmentApp.Core.Shifts.Models
         public int AgentNumber { get; set; }
         public AgentSeniorityType AgentSeniorityType { get; set; }
         public short MaxChatSessions { get; set; }
+        public bool IsOverflowAgent { get; set; }
 
         public AgentModel(Agent agent)
         {
@@ -15,6 +16,7 @@ namespace ChatAssignmentApp.Core.Shifts.Models
             AgentNumber = agent.AgentNumber;
             AgentSeniorityType = agent.AgentSeniorityType;
             MaxChatSessions = agent.MaxChatSessions;
+            IsOverflowAgent = agent.IsOverflowAgent;
         }
     }
 }

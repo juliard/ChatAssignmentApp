@@ -32,33 +32,23 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
             var agents = new List<Agent>();
 
             if (model.NumberOfJuniorAgents > 0)
-            {
-                agents.AddRange(CreateAgents(model.NumberOfJuniorAgents, AgentSeniorityType.Junior));
-            }
+                agents.AddRange(CreateAgents(model.NumberOfJuniorAgents, AgentSeniorityType.Junior, false));
 
             if (model.NumberOfMidAgents > 0)
-            {
-                agents.AddRange(CreateAgents(model.NumberOfMidAgents, AgentSeniorityType.Mid));
-            }
+                agents.AddRange(CreateAgents(model.NumberOfMidAgents, AgentSeniorityType.Mid, false));
 
             if (model.NumberOfSeniorAgents > 0)
-            {
-                agents.AddRange(CreateAgents(model.NumberOfSeniorAgents, AgentSeniorityType.Senior));
-            }
+                agents.AddRange(CreateAgents(model.NumberOfSeniorAgents, AgentSeniorityType.Senior, false));
 
             if (model.NumberOfLeadAgents > 0)
-            {
-                agents.AddRange(CreateAgents(model.NumberOfLeadAgents, AgentSeniorityType.Lead));
-            }
+                agents.AddRange(CreateAgents(model.NumberOfLeadAgents, AgentSeniorityType.Lead, false));
 
             var shift = new Shift(
                 model.ShiftStart,
                 agents);
 
             if (model.IsOverflowAgentsAvailable)
-            {
-                shift.AddOverflowAgents(CreateAgents(6, AgentSeniorityType.Junior));
-            }
+                shift.AddOverflowAgents(CreateAgents(6, AgentSeniorityType.Junior, true));
 
             _shiftStorageService.CreateShift(shift);
 
@@ -72,7 +62,8 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
 
         private List<Agent> CreateAgents(
             short numberOfAgents,
-            AgentSeniorityType agentSeniorityType)
+            AgentSeniorityType agentSeniorityType,
+            bool isOverflowAgent)
         {
             var agents = new List<Agent>();
 
@@ -81,7 +72,8 @@ namespace ChatAssignmentApp.Core.Shifts.Commands
                 agents.Add(
                     new Agent(
                         i + 1,
-                        agentSeniorityType));
+                        agentSeniorityType,
+                        isOverflowAgent));
             }
 
             return agents;

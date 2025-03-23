@@ -10,6 +10,8 @@ namespace ChatAssignmentApp.Core
         {
             services.AddChatCommands();
             services.AddShiftCommands();
+
+            services.AddChatHostedServices();
         }
     }
 }
