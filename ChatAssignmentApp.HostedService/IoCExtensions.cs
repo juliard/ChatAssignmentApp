@@ -1,5 +1,4 @@
-﻿using ChatAssignmentApp.HostedService.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatAssignmentApp.HostedService
 {
@@ -8,8 +7,6 @@ namespace ChatAssignmentApp.HostedService
         public static void InjectHostedServices(this IServiceCollection services)
         {
             services.AddHostedService<ActiveChatMonitorHostedService>();
-            services.AddHostedService<AgentChatDistributorHostedService>();
-            services.AddHostedService<ChatQueueDistributorHostedService>();
             services.AddHostedService<RemoveInactiveChatMonitorHostedService>();
         }
     }

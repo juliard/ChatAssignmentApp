@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChatAssignmentApp.Core\ChatAssignmentApp.Core.csproj" />
-    <ProjectReference Include="..\ChatAssignmentApp.HostedService\ChatAssignmentApp.HostedService.csproj" />
     <ProjectReference Include="..\ChatAssignmentApp.Memory\ChatAssignmentApp.Memory.csproj" />
     <ProjectReference Include="..\ChatAssignmentApp.Queuing\ChatAssignmentApp.Queuing.csproj" />
   </ItemGroup>

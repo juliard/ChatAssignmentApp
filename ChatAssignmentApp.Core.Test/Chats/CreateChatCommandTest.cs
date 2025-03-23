@@ -28,7 +28,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
                 }
             };
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
             shift.AddOverflowAgents([agent]);
 
@@ -75,7 +75,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
                 }
             };
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
             shift.AddOverflowAgents([agent]);
 
@@ -122,7 +122,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
                 }
             };
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
             shift.ForceShiftEnd();
 
@@ -161,7 +161,7 @@ namespace ChatAssignmentApp.Core.Test.Chats
                 }
             };
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
             shift.AddOverflowAgents([agent]);
 

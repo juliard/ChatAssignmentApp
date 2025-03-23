@@ -8,12 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.3" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ChatAssignmentApp.Core.Model\ChatAssignmentApp.Core.Model.csproj" />
     <ProjectReference Include="..\ChatAssignmentApp.Domain\ChatAssignmentApp.Domain.csproj" />
+    <ProjectReference Include="..\ChatAssignmentApp.Memory\ChatAssignmentApp.Memory.csproj" />
   </ItemGroup>
 
 </Project>

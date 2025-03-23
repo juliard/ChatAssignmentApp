@@ -2,7 +2,7 @@
 using ChatAssignmentApp.Memory.Services;
 using Microsoft.Extensions.Hosting;
 
-namespace ChatAssignmentApp.HostedService.Services
+namespace ChatAssignmentApp.Core.Chats.HostedServices
 {
     public class ActiveChatMonitorHostedService : BackgroundService
     {

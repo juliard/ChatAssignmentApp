@@ -1,4 +1,5 @@
 ﻿using ChatAssignmentApp.Core.Chats.Commands;
+using ChatAssignmentApp.Core.Chats.HostedServices;
 using ChatAssignmentApp.Core.Chats.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,12 @@ namespace ChatAssignmentApp.Core.Chats
             services.AddTransient<IGetChatCommand, GetChatCommand>();
             services.AddTransient<IGetChatsCommand, GetChatsCommand>();
             services.AddTransient<IUpdateChatCommand, UpdateChatCommand>();
+        }
+
+        public static void AddChatHostedServices(this IServiceCollection services)
+        {
+            services.AddHostedService<ActiveChatMonitorHostedService>();
+            services.AddHostedService<RemoveInactiveChatMonitorHostedService>();
         }
     }
 }

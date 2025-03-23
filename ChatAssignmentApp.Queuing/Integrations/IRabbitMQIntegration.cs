@@ -13,9 +13,6 @@
             string queueName,
             string item);
 
-        Task<string> Dequeue(
-            string queueName);
-
         Task<uint> GetQueueItemCount(
             string queueName);
     }

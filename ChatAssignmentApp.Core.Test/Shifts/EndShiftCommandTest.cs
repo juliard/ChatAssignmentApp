@@ -26,7 +26,7 @@ namespace ChatAssignmentApp.Core.Test.Shifts
                 .Setup(a => a.GetQueueItemCount(It.IsAny<string>()))
                 .ReturnsAsync((uint)1);
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
 
             var shiftStorage = new Mock<IShiftStorageService>();
@@ -64,7 +64,7 @@ namespace ChatAssignmentApp.Core.Test.Shifts
             queueService
                 .Setup(a => a.DeleteQueues(It.IsAny<bool>()));
 
-            var agent = new Agent(1, AgentSeniorityType.Junior);
+            var agent = new Agent(1, AgentSeniorityType.Junior, false);
             var shift = new Shift(DateTime.Now, [agent]);
 
             var shiftStorage = new Mock<IShiftStorageService>();

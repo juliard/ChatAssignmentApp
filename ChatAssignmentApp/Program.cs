@@ -1,6 +1,5 @@
 using ChatAssignmentApp.Core;
 using ChatAssignmentApp.Core.Model;
-using ChatAssignmentApp.HostedService;
 using ChatAssignmentApp.Memory;
 using ChatAssignmentApp.Queuing;
 
@@ -18,8 +17,6 @@ builder.Services.AddSingleton(config);
 builder.Services.InjectMemory();
 builder.Services.InjectQueuing();
 builder.Services.InjectCore();
-
-builder.Services.InjectHostedServices();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
