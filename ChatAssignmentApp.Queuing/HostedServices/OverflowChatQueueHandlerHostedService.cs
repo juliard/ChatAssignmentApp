@@ -27,7 +27,6 @@ namespace ChatAssignmentApp.Queuing.HostedServices
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
         {
-            await Task.Delay(60000, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
                 var shift = _shiftStorageService.GetShift();
