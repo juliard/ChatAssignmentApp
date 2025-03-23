@@ -7,6 +7,7 @@
 
     public class RabbitMQConfiguration
     {
+        public int ChatInactivityExpiryInSeconds { get; set; }
         public string MainChatQueueName { get; set; } = string.Empty;
         public string OverflowChatQueueName { get; set; } = string.Empty;
         public string RabbitMQConnectionName { get; set; } = string.Empty;
